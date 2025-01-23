@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminder SSL Expiration for {{ hostname }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .content {
+            text-align: center;
+            font-size: 16px;
+            color: #666666;
+        }
+        .button {
+            display: inline-block;
+            background-color: #28a745;
+            color: #ffffff;
+            text-align: center;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Reminder: SSL dari Domain {{ hostname }} akan kedaluwarsa!</div>
+        <div class="content">
+            Halo {{ email }} kamu tercatat sebagai Pemilik dari Domain {{ hostname }}<br><br>
+            Kami ingin mengingatkan Anda bahwa SSL dari domain {{ hostname }} akan kedaluwarsa dalam <strong>{{ exp_days }} hari</strong>. Untuk menghindari gangguan dalam layanan Anda, kami sarankan untuk mengganti SSL Anda segera.<br><br>
+        </div>
+        <div class="footer">
+            Jika Anda memiliki pertanyaan atau memerlukan bantuan lebih lanjut, silakan hubungi <a href="mailto:{{ admin }}">{{ admin }}</a>.<br>
+            Terima kasih atas perhatian Anda.
+        </div>
+    </div>
+</body>
+</html>
