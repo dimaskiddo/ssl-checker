@@ -36,14 +36,18 @@ def process_csv_file(csv_file_path):
                         body_template = parse_template("templates/errors.html")
                         body_email = body_template.render({"email": admin_email, "hostname": hostname, "error": err})
 
-                        send_email(admin_email, f"Galat Pengecekan Kedaluwarsa SSL untuk \"{hostname}\"", body_email)
+                        err = send_email(admin_email, f"Galat Pengecekan Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
+                        if err is not None:
+                            log.error(f"--> {err}")
                     else:
                         log.warning(f"-> Sending Mail Notification to ${contact_email}")
 
                         body_template = parse_template("templates/expired.html")
                         body_email = body_template.render({"email": contact_email, "admin": admin_email, "hostname": hostname, "error": err})
 
-                        send_email(contact_email, f"Peringatan Kedaluwarsa SSL untuk \"{hostname}\"", body_email)
+                        err = send_email(contact_email, f"Peringatan Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
+                        if err is not None:
+                            log.error(f"--> {err}")
                 else:
                     # Menghitung selisih waktu
                     current_date = datetime.datetime.now()
@@ -56,7 +60,9 @@ def process_csv_file(csv_file_path):
                         body_template = parse_template("templates/reminder.html")
                         body_email = body_template.render({"email": contact_email, "admin": admin_email, "hostname": hostname, "exp_days": days_until_expiration})
 
-                        send_email(contact_email, f"Pengingat Kedaluwarsa SSL untuk \"{hostname}\"", body_email)
+                        err = send_email(contact_email, f"Pengingat Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
+                        if err is not None:
+                            log.error(f"--> {err}")
                     else:
                         log.info(f"\"{hostname}\" Expired at {expiration.strftime('%d-%m-%Y')}")
     except csv.Error:

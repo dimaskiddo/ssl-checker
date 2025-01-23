@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from logger import log
 from utils import parse_env
 
-def send_email(email_to, subject, body):
+def send_email(email_to, subject, body, body_type='plain'):
     # Load credential dan konfigurasi dari environment variable
     email_from = parse_env('EMAIL_FROM')
 
@@ -27,7 +27,7 @@ def send_email(email_to, subject, body):
     msg['Subject'] = subject
 
     # Tambahkan isi email ke objek MIME
-    msg.attach(MIMEText(body, 'html'))
+    msg.attach(MIMEText(body, body_type))
 
     try:
         # Koneksi ke Gmail SMTP server
@@ -41,7 +41,9 @@ def send_email(email_to, subject, body):
             # Kirim email
             text = msg.as_string()
             server.sendmail(email_from, email_to, text)
+
+        return None
     except smtplib.SMTPException as e:
-        log.error(f"--> Unable to send email: {e}")
+        return f"Unable to send email. {e}"
     except Exception as e:
-        log.error(f"--> Exception when sending mail: {e}")
+        return f"Unexpected error. {e}"
