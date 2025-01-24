@@ -5,9 +5,10 @@ import sys
 import time
 import schedule
 
-from logger import log
-from utils import fatal_exit
+import config
+
 from dotenv import load_dotenv
+
 from jobs import process_csv_file
 
 if __name__ == "__main__":
@@ -16,8 +17,9 @@ if __name__ == "__main__":
 
     # Cek apakah parameter file CSV di inputkan
     if len(sys.argv) != 2:
-        fatal_exit(f"Usage: python3 {script_name} <path_to_csv_file>")
- 
+        print(f"Usage: python3 {script_name} <path_to_csv_file>")
+        sys.exit(1)
+
     # Load konfigurasi dari .env
     load_dotenv()
 
@@ -25,7 +27,7 @@ if __name__ == "__main__":
     csv_file_path = sys.argv[1]
 
     # Masukan pengecekan SSL Domain sebagai shceduled job
-    schedule.every().minutes.do(process_csv_file, csv_file_path)
+    schedule.every().day.at(config.CRON_DAY_TIME).do(process_csv_file, csv_file_path)
 
     # Loop untuk menjalankan scheduled job
     while True:

@@ -1,0 +1,12 @@
+from utils import parse_env
+
+CRON_DAY_TIME = parse_env("CRON_DAY_TIME", "00:00")
+SSL_DAYS_TRESHOLD = int(parse_env("SSL_DAYS_TRESHOLD", 30))
+
+EMAIL_SMTP_HOST = parse_env('EMAIL_SMTP_HOST')
+EMAIL_SMTP_PORT = parse_env('EMAIL_SMTP_PORT', 587)
+EMAIL_SMTP_USERNAME = parse_env("EMAIL_SMTP_USERNAME")
+EMAIL_SMTP_PASSWORD = parse_env("EMAIL_SMTP_PASSWORD")
+EMAIL_SMTP_USE_TLS = parse_env('EMAIL_SMTP_USE_TLS', False)
+
+EMAIL_FROM = parse_env('EMAIL_FROM')

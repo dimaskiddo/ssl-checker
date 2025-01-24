@@ -1,28 +1,19 @@
 import smtplib
 
+import config
+
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from logger import log
-from utils import parse_env
 
 def send_email(email_to, subject, body, body_type='plain'):
-    # Load credential dan konfigurasi dari environment variable
-    email_from = parse_env('EMAIL_FROM')
-
-    # Konfigurasi SMTP server
-    smtp_host = parse_env('EMAIL_SMTP_HOST')
-    smtp_port = parse_env('EMAIL_SMTP_PORT', 587)
-    smtp_user = parse_env("EMAIL_SMTP_USERNAME")
-    smtp_pass = parse_env("EMAIL_SMTP_PASSWORD")
-    smtp_tls = parse_env('EMAIL_SMTP_USE_TLS', False)
-
-    if bool(smtp_tls):
-        smtp_port = 587
+    if bool(config.EMAIL_SMTP_USE_TLS):
+        config.EMAIL_SMTP_PORT = 587
 
     # Buat objek MIME
     msg = MIMEMultipart()
-    msg['From'] = f"{email_from} <{email_from}>"
+    msg['From'] = f"{config.EMAIL_FROM} <{config.EMAIL_FROM}>"
     msg['To'] = f"{email_to} <{email_to}>"
     msg['Subject'] = subject
 
@@ -31,16 +22,16 @@ def send_email(email_to, subject, body, body_type='plain'):
 
     try:
         # Koneksi ke Gmail SMTP server
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
-            if bool(smtp_tls):
+        with smtplib.SMTP(config.EMAIL_SMTP_HOST, config.EMAIL_SMTP_PORT) as server:
+            if bool(config.EMAIL_SMTP_USE_TLS):
                 server.starttls()
 
             # Login ke akun email
-            server.login(smtp_user, smtp_pass)
+            server.login(config.EMAIL_SMTP_USERNAME, config.EMAIL_SMTP_PASSWORD)
 
             # Kirim email
             text = msg.as_string()
-            server.sendmail(email_from, email_to, text)
+            server.sendmail(config.EMAIL_FROM, email_to, text)
 
         return None
     except smtplib.SMTPException as e:

@@ -1,11 +1,10 @@
 import os
-import sys
 
 from jinja2 import Environment, FileSystemLoader
 
 from logger import log
 
-def parse_env(env_name, default=None):
+def parse_env(env_name, default=None, empty_fatal=None):
     # Dapatkan value dari environment variable
     env_value = os.getenv(env_name)
 
@@ -15,8 +14,9 @@ def parse_env(env_name, default=None):
         if default != None:
             return default
         else:
-            log.error(f"{env_name} environment variable is not defined")
-            sys.exit(1)
+            # Jika tidak ada value dan empty_fatal tidak none maka keluarkan pesan fatal
+            if empty_fatal is not None:
+                fatal_exit(f"{env_name} environment variable is not defined")
     else:
         # Kembalikan nilai dari environment variable
         return env_value.strip()
@@ -37,12 +37,3 @@ def parse_template(filename):
 
     # Jika tidak ada kembalikan None    
     return None
-
-def fatal_exit(message=''):
-    # Cek apakah pesan ada isinya
-    if len(message.strip()) != 0:
-        # Keluarkan pesan dalam bentuk log fatal
-        log.fatal(message)
-
-    # Keluar aplikasi dengan exit code 1
-    sys.exit(1)
