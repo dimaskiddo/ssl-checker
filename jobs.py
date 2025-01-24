@@ -1,8 +1,7 @@
+import env
+import sys
 import csv
 import datetime
-import sys
-
-import config
 
 from logger import log
 from utils import parse_template
@@ -30,19 +29,19 @@ def process_csv_file(csv_file_path):
                     log.warning(f"{err}")
 
                     if "Unexpected" in err:
-                        log.warning(f"-> Sending Mail Notification to ${config.EMAIL_FROM}")
+                        log.warning(f"-> Sending Mail Notification to ${env.EMAIL_FROM}")
 
                         body_template = parse_template("templates/errors.html")
-                        body_email = body_template.render({"email": config.EMAIL_FROM, "hostname": hostname, "error": err})
+                        body_email = body_template.render({"email": env.EMAIL_FROM, "hostname": hostname, "error": err})
 
-                        err = send_email(config.EMAIL_FROM, f"Galat Pengecekan Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
+                        err = send_email(env.EMAIL_FROM, f"Galat Pengecekan Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
                         if err is not None:
                             log.error(f"--> {err}")
                     else:
                         log.warning(f"-> Sending Mail Notification to ${contact_email}")
 
                         body_template = parse_template("templates/expired.html")
-                        body_email = body_template.render({"email": contact_email, "admin": config.EMAIL_FROM, "hostname": hostname, "error": err})
+                        body_email = body_template.render({"email": contact_email, "admin": env.EMAIL_FROM, "hostname": hostname, "error": err})
 
                         err = send_email(contact_email, f"Peringatan Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
                         if err is not None:
@@ -52,12 +51,12 @@ def process_csv_file(csv_file_path):
                     current_date = datetime.datetime.now()
                     days_until_expiration = (expiration - current_date).days
 
-                    if days_until_expiration <= config.SSL_DAYS_TRESHOLD:
+                    if days_until_expiration <= env.SSL_DAYS_TRESHOLD:
                         log.warning(f"\"{hostname}\" Expired at {expiration.strftime('%d-%m-%Y')} ({days_until_expiration} Days from Now)")
                         log.warning(f"-> Sending Mail Notification to {contact_email}")
 
                         body_template = parse_template("templates/reminder.html")
-                        body_email = body_template.render({"email": contact_email, "admin": config.EMAIL_FROM, "hostname": hostname, "exp_days": days_until_expiration})
+                        body_email = body_template.render({"email": contact_email, "admin": env.EMAIL_FROM, "hostname": hostname, "exp_days": days_until_expiration})
 
                         err = send_email(contact_email, f"Pengingat Kedaluwarsa SSL untuk \"{hostname}\"", body_email, 'html')
                         if err is not None:

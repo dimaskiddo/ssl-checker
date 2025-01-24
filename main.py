@@ -2,10 +2,9 @@
 
 import os
 import sys
+import env
 import time
 import schedule
-
-import config
 
 from dotenv import load_dotenv
 
@@ -27,7 +26,7 @@ if __name__ == "__main__":
     csv_file_path = sys.argv[1]
 
     # Masukan pengecekan SSL Domain sebagai shceduled job
-    schedule.every().day.at(config.CRON_DAY_TIME).do(process_csv_file, csv_file_path)
+    schedule.every().day.at(env.CRON_DAY_TIME).do(process_csv_file, csv_file_path)
 
     # Loop untuk menjalankan scheduled job
     while True:
