@@ -12,7 +12,7 @@ from mailer import send_email
 def process_csv_file(csv_file_path):
     try:
         # Buka file CSV
-        with open(csv_file_path, mode='r') as file:
+        with open(csv_file_path, mode='r', encoding="utf-8-sig") as file:
             reader = csv.DictReader(file)
 
             # Baca setiap row file CSV
